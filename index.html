@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATSF 2026 - Approximation Theory & Special Functions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .purple-white-mix { 
+            background: 
+                linear-gradient(135deg, #6B46C1 0%, #9F7AEA 25%, #EDE9FE 50%, #F8FAFC 75%, #FFFFFF 100%),
+                radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(167, 139, 250, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255,255,255,0.4) 1px, transparent 1px),
+                radial-gradient(circle at 60% 60%, rgba(255,255,255,0.3) 1px, transparent 1px);
+            background-size: 400% 400%, 100% 100%, 100% 100%, 50px 50px, 50px 50px;
+            animation: gradientShift 15s ease infinite;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%, 50% 50%, 50% 50%, 0% 0%, 100% 100%; }
+            50% { background-position: 100% 50%, 0% 100%, 0% 100%, 100% 0%, 0% 100%; }
+        }
+        .glass { 
+            backdrop-filter: blur(20px); 
+            background: rgba(255,255,255,0.25); 
+            border: 1px solid rgba(255,255,255,0.4); 
+        }
+        .glass-purple { 
+            backdrop-filter: blur(20px); 
+            background: rgba(139, 92, 246, 0.15); 
+            border: 1px solid rgba(167, 139, 250, 0.5); 
+        }
+        .footer-glass {
+            backdrop-filter: blur(20px);
+            background: rgba(0,0,0,0.85);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fadeInUp { animation: fadeInUp 0.8s ease-out forwards; }
+        .nav-active { 
+            background: linear-gradient(135deg, #8B5CF6, #C4B5FD) !important; 
+            color: white !important; 
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4);
+        }
+        .purple-glow { box-shadow: 0 0 20px rgba(139, 92, 246, 0.4); }
+        .white-glow { box-shadow: 0 0 20px rgba(255,255,255,0.6); }
+    </style>
+</head>
+<body class="min-h-screen text-gray-900 purple-white-mix overflow-x-hidden">
+
+    <!-- Navigation Bar -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 glass px-6 py-4 transition-all duration-300">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <a href="#hero" class="text-2xl font-bold bg-gradient-to-r from-purple-800 via-purple-500 to-white bg-clip-text text-transparent hover:scale-105 transition-all duration-300 white-glow">
+                ATSF 2026
+            </a>
+            <ul id="nav-menu" class="hidden md:flex space-x-8 items-center">
+                <li><a href="#hero" class="nav-link px-4 py-2 rounded-xl hover:bg-white/50 hover:text-purple-800 transition-all duration-300 font-semibold text-gray-700">Home</a></li>
+                <li><a href="#about" class="nav-link px-4 py-2 rounded-xl hover:bg-white/50 hover:text-purple-800 transition-all duration-300 font-semibold text-gray-700">About</a></li>
+                <li><a href="#topics" class="nav-link px-4 py-2 rounded-xl hover:bg-white/50 hover:text-purple-800 transition-all duration-300 font-semibold text-gray-700">Topics</a></li>
+                <li><a href="#speakers" class="nav-link px-4 py-2 rounded-xl hover:bg-white/50 hover:text-purple-800 transition-all duration-300 font-semibold text-gray-700">Speakers</a></li>
+                <li><a href="#history" class="nav-link px-4 py-2 rounded-xl hover:bg-white/50 hover:text-purple-800 transition-all duration-300 font-semibold text-gray-700">History</a></li>
+                <li><a href="#proceedings" class="nav-link px-4 py-2 rounded-xl hover:bg-white/50 hover:text-purple-800 transition-all duration-300 font-semibold text-gray-700">Proceedings</a></li>
+            </ul>
+            <button id="mobile-toggle" class="md:hidden text-2xl hover:scale-110 transition-all duration-300 text-gray-700 hover:text-purple-600">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden glass-purple mt-4 pb-6 rounded-2xl mx-6">
+            <ul class="space-y-4 px-6">
+                <li><a href="#hero" class="nav-link block px-4 py-3 rounded-xl hover:bg-purple-100 hover:text-purple-800 transition-all duration-300 font-semibold text-gray-700">Home</a></li>
+                <li><a href="#about" class="nav-link block px-4 py-3 rounded-xl hover:bg-purple-100 hover:text-purple-800 transition-all duration-300 font-semibold text-gray-700">About</a></li>
+                <li><a href="#topics" class="nav-link block px-4 py-3 rounded-xl hover:bg-purple-100 hover:text-purple-800 transition-all duration-300 font-semibold text-gray-700">Topics</a></li>
+                <li><a href="#speakers" class="nav-link block px-4 py-3 rounded-xl hover:bg-purple-100 hover:text-purple-800 transition-all duration-300 font-semibold text-gray-700">Speakers</a></li>
+                <li><a href="#history" class="nav-link block px-4 py-3 rounded-xl hover:bg-purple-100 hover:text-purple-800 transition-all duration-300 font-semibold text-gray-700">History</a></li>
+                <li><a href="#proceedings" class="nav-link block px-4 py-3 rounded-xl hover:bg-purple-100 hover:text-purple-800 transition-all duration-300 font-semibold text-gray-700">Proceedings</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="hero" class="relative h-screen flex items-center justify-center text-center px-4 pt-24 md:pt-32">
+        <div class="absolute inset-0 bg-white/40"></div>
+        <div class="glass p-12 rounded-3xl max-w-4xl mx-auto animate-fadeInUp white-glow">
+            <h1 class="text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-purple-800 via-purple-600 to-purple-400 bg-clip-text text-transparent drop-shadow-2xl">
+                ATSF 2026
+            </h1>
+            <p class="text-2xl md:text-3xl mb-6 font-light text-gray-700">International Conference on Approximation Theory & Special Functions</p>
+            <div class="space-y-2 text-xl mb-8 text-gray-600">
+                <p><i class="fas fa-calendar-alt text-purple-600 mr-2"></i>September 2–5, 2026</p>
+                <p><i class="fas fa-map-marker-alt text-purple-600 mr-2"></i>TOBB ETU, Ankara, Türkiye</p>
+            </div>
+            <a href="#about" class="bg-white hover:bg-purple-50 backdrop-blur-sm px-12 py-4 rounded-2xl text-xl font-semibold transition-all duration-300 inline-block border-2 border-purple-200 hover:border-purple-400 purple-glow text-purple-800 shadow-xl">
+                Explore Conference
+            </a>
+        </div>
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+            <i class="fas fa-chevron-down text-2xl animate-bounce text-purple-500"></i>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 px-4 md:px-8">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-purple-800 to-purple-400 bg-clip-text text-transparent animate-fadeInUp">About ATSF</h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="animate-fadeInUp delay-200">
+                    <p class="text-xl leading-relaxed mb-6 text-gray-700">ATSF is an international conference series organized to bring together researchers from ALL areas of Approximation Theory and Special Functions to discuss new ideas and new applications. The series began in 2013 and gathers researchers worldwide, with its 8th edition in 2024 hosting 250 scientists from 30 different countries.[attached_file:1]</p>
+                    <p class="text-xl leading-relaxed text-gray-700">The ATSF 2026 is the 9th event, fostering interaction between theoretical developments and applications in numerical analysis and related fields.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 animate-fadeInUp delay-400">
+                    <div class="glass p-6 rounded-2xl text-center purple-glow">
+                        <div class="text-3xl font-bold text-purple-700 mb-2">9th</div>
+                        <div class="text-gray-600 font-semibold">Edition</div>
+                    </div>
+                    <div class="glass p-6 rounded-2xl text-center purple-glow">
+                        <div class="text-3xl font-bold text-purple-700 mb-2">250+</div>
+                        <div class="text-gray-600 font-semibold">Participants (2024)</div>
+                    </div>
+                    <div class="glass p-6 rounded-2xl text-center purple-glow">
+                        <div class="text-3xl font-bold text-purple-700 mb-2">2013</div>
+                        <div class="text-gray-600 font-semibold">Started</div>
+                    </div>
+                    <div class="glass p-6 rounded-2xl text-center purple-glow">
+                        <div class="text-3xl font-bold text-purple-700 mb-2">30+</div>
+                        <div class="text-gray-600 font-semibold">Countries</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Topics Section -->
+    <section id="topics" class="py-24 px-4 md:px-8">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-purple-800 to-purple-400 bg-clip-text text-transparent animate-fadeInUp">Main Topics</h2>
+            <ul class="grid md:grid-cols-2 gap-6 text-xl">
+                <li class="glass-purple p-8 rounded-2xl hover:scale-105 hover:purple-glow transition-all duration-300 animate-fadeInUp delay-100">
+                    <i class="fas fa-brain text-purple-600 text-2xl mb-4 block"></i>
+                    <span class="font-bold text-gray-800 block mt-2">Approximation Theory</span>
+                </li>
+                <li class="glass-purple p-8 rounded-2xl hover:scale-105 hover:purple-glow transition-all duration-300 animate-fadeInUp delay-200">
+                    <i class="fas fa-calculator text-purple-600 text-2xl mb-4 block"></i>
+                    <span class="font-bold text-gray-800 block mt-2">Summability Theory</span>
+                </li>
+                <li class="glass-purple p-8 rounded-2xl hover:scale-105 hover:purple-glow transition-all duration-300 animate-fadeInUp delay-300">
+                    <i class="fas fa-chart-line text-purple-600 text-2xl mb-4 block"></i>
+                    <span class="font-bold text-gray-800 block mt-2">Orthogonal Polynomials</span>
+                </li>
+                <li class="glass-purple p-8 rounded-2xl hover:scale-105 hover:purple-glow transition-all duration-300 animate-fadeInUp delay-400">
+                    <i class="fas fa-star text-purple-600 text-2xl mb-4 block"></i>
+                    <span class="font-bold text-gray-800 block mt-2">Special Functions</span>
+                </li>
+            </ul>
+            <p class="text-center mt-12 text-lg text-gray-600 font-semibold">(But not limited to)</p>
+        </div>
+    </section>
+
+    <!-- Speakers Section -->
+    <section id="speakers" class="py-24 px-4 md:px-8">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-purple-800 to-purple-400 bg-clip-text text-transparent animate-fadeInUp">Confirmed Speakers</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="glass p-6 rounded-2xl text-center hover:scale-105 hover:purple-glow transition-all duration-300 animate-fadeInUp delay-100">
+                    <div class="w-24 h-24 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center text-xl font-bold text-white">OA</div>
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Prof. Octavian Agratini</h3>
+                    <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">Confirmed</span>
+                </div>
+                <div class="glass p-6 rounded-2xl text-center hover:scale-105 hover:purple-glow transition-all duration-300 animate-fadeInUp delay-200">
+                    <div class="w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mb-4 flex items-center justify-center text-xl font-bold text-white">GA</div>
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Prof. George A. Anastassiou</h3>
+                    <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">Confirmed</span>
+                </div>
+                <div class="glass p-6 rounded-2xl text-center hover:scale-105 hover:purple-glow transition-all duration-300 animate-fadeInUp delay-300">
+                    <div class="w-24 h-24 bg-gradient-to-r from-purple-600 to-indigo-500 rounded-full mx-auto mb-4 flex items-center justify-center text-xl font-bold text-white">NEO</div>
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800">Prof. Nazife Erkurşun Özcan</h3>
+                    <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">Confirmed</span>
+                </div>
+            </div>
+            <p class="text-center mt-12 text-lg text-gray-600">More leading experts to be announced.</p>
+        </div>
+    </section>
+
+    <!-- History Section -->
+    <section id="history" class="py-24 px-4 md:px-8">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-purple-800 to-purple-400 bg-clip-text text-transparent animate-fadeInUp">Series History</h2>
+            <div class="space-y-4">
+                <div class="glass-purple p-6 rounded-2xl flex justify-between items-center animate-fadeInUp delay-100 hover:scale-[1.02] transition-all duration-300">
+                    <span class="text-gray-800 font-medium">2024: 8th, Ankara, Türkiye (250+ from 30 countries)</span>
+                    <i class="fas fa-trophy text-purple-500 text-xl"></i>
+                </div>
+                <div class="glass-purple p-6 rounded-2xl flex justify-between items-center animate-fadeInUp delay-200 hover:scale-[1.02] transition-all duration-300">
+                    <span class="text-gray-800 font-medium">2019: 6th, Belgium</span>
+                    <i class="fas fa-map-marker-alt text-purple-400"></i>
+                </div>
+                <div class="glass-purple p-6 rounded-2xl flex justify-between items-center animate-fadeInUp delay-300 hover:scale-[1.02] transition-all duration-300">
+                    <span class="text-gray-800 font-medium">2018: 5th, Hungary</span>
+                    <i class="fas fa-map-marker-alt text-purple-400"></i>
+                </div>
+            </div>
+            <p class="text-center mt-8 text-lg text-gray-600 font-medium">Started in 2013 in Greece.</p>
+        </div>
+    </section>
+
+    <!-- Proceedings Section -->
+    <section id="proceedings" class="py-24 px-4 md:px-8">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 text-center">
+            <div class="glass p-12 rounded-3xl hover:scale-105 hover:purple-glow transition-all duration-300 animate-fadeInUp">
+                <i class="fas fa-book text-4xl text-purple-600 mb-6 block"></i>
+                <h3 class="text-2xl font-bold mb-4 text-gray-800">Proceedings</h3>
+                <p class="text-gray-700">Published in reputable international journals and publishers.</p>
+            </div>
+            <div class="glass p-12 rounded-3xl hover:scale-105 hover:purple-glow transition-all duration-300 animate-fadeInUp delay-200">
+                <i class="fas fa-users text-4xl text-purple-600 mb-6 block"></i>
+                <h3 class="text-2xl font-bold mb-4 text-gray-800">Participants</h3>
+                <p class="text-gray-700">List updated periodically.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FIXED CLEAR FOOTER -->
+    <footer id="footer" class="footer-glass border-t border-white/30 pt-16 pb-12 px-4 md:px-8 text-white">
+        <div class="max-w-6xl mx-auto">
+            <!-- Top Footer Row -->
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <!-- Logo & Description -->
+                <div class="animate-fadeInUp">
+                    <a href="#hero" class="text-3xl font-bold bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent mb-4 block hover:scale-105 transition-all duration-300 white-glow">ATSF 2026</a>
+                    <p class="text-white/90 mb-6 leading-relaxed">International Conference on Approximation Theory & Special Functions. Bringing together researchers worldwide since 2013.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-12 h-12 glass rounded-xl flex items-center justify-center hover:bg-white/50 hover:scale-110 transition-all duration-300 text-white">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 glass rounded-xl flex items-center justify-center hover:bg-white/50 hover:scale-110 transition-all duration-300 text-white">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 glass rounded-xl flex items-center justify-center hover:bg-white/50 hover:scale-110 transition-all duration-300 text-white">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="animate-fadeInUp delay-200">
+                    <h3 class="text-xl font-bold mb-6 text-white">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#about" class="hover:text-purple-200 transition-all duration-300 flex items-center text-white/90 hover:translate-x-2">
+                            <i class="fas fa-chevron-right mr-2 text-purple-300"></i>About ATSF
+                        </a></li>
+                        <li><a href="#speakers" class="hover:text-purple-200 transition-all duration-300 flex items-center text-white/90 hover:translate-x-2">
+                            <i class="fas fa-chevron-right mr-2 text-purple-300"></i>Speakers
+                        </a></li>
+                        <li><a href="#topics" class="hover:text-purple-200 transition-all duration-300 flex items-center text-white/90 hover:translate-x-2">
+                            <i class="fas fa-chevron-right mr-2 text-purple-300"></i>Topics
+                        </a></li>
+                        <li><a href="#history" class="hover:text-purple-200 transition-all duration-300 flex items-center text-white/90 hover:translate-x-2">
+                            <i class="fas fa-chevron-right mr-2 text-purple-300"></i>History
+                        </a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="animate-fadeInUp delay-400">
+                    <h3 class="text-xl font-bold mb-6 text-white">Contact Info</h3>
+                    <div class="space-y-4 text-lg">
+                        <p class="flex items-center text-white/90">
+                            <i class="fas fa-map-marker-alt text-purple-300 mr-3"></i>
+                            TOBB ETU, Ankara, Türkiye
+                        </p>
+                        <p class="flex items-center text-white/90">
+                            <i class="fas fa-phone text-purple-300 mr-3"></i>
+                            +90 312 292 1234
+                        </p>
+                        <p class="flex items-center text-white/90">
+                            <i class="fas fa-envelope text-purple-300 mr-3"></i>
+                            info@atsf2026.org
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="animate-fadeInUp delay-600">
+                    <h3 class="text-xl font-bold mb-6 text-white">Stay Updated</h3>
+                    <p class="mb-6 text-white/90">Get the latest conference updates</p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="email" placeholder="Enter your email" 
+                               class="glass px-4 py-3 rounded-xl text-gray-900 placeholder-gray-500 flex-1 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent">
+                        <button class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 px-8 py-3 rounded-xl font-semibold text-white transition-all duration-300 shadow-lg hover:shadow-xl purple-glow whitespace-nowrap">
+                            Subscribe
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-white/30 pt-8 flex flex-col md:flex-row justify-between items-center text-center gap-4">
+                <p class="text-white/80 text-sm">&copy; 2026 ATSF Conference. Organized by TOBB ETU, Ankara. All rights reserved.[attached_file:1]</p>
+                <div class="flex space-x-6 text-sm text-white/70">
+                    <a href="#" class="hover:text-white transition-colors duration-300 hover:purple-glow">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors duration-300 hover:purple-glow">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition-colors duration-300 hover:purple-glow">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 w-14 h-14 glass rounded-full text-2xl flex items-center justify-center hover:scale-110 hover:bg-white/60 transition-all duration-300 z-40 hidden purple-glow">
+        <i class="fas fa-arrow-up text-purple-600"></i>
+    </button>
+
+    <script>
+        // Navigation functionality
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        mobileToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const icon = mobileToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                mobileMenu.classList.add('hidden');
+                mobileToggle.querySelector('i').classList.add('fa-bars');
+                mobileToggle.querySelector('i').classList.remove('fa-times');
+            });
+        });
+
+        // Active nav highlighting
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section, header');
+            const navHeight = document.getElementById('navbar').offsetHeight;
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - navHeight;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('nav-active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('nav-active');
+                }
+            });
+        });
+
+        // Back to top
+        const backToTopBtn = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTopBtn.classList.remove('hidden');
+            } else {
+                backToTopBtn.classList.add('hidden');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Newsletter demo
+        document.querySelector('footer button').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Thank you for subscribing! 🎉');
+        });
+    </script>
+</body>
+</html>
